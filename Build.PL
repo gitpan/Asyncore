@@ -6,39 +6,41 @@ use Module::Build 0.3601;
 
 
 my %module_build_args = (
-  "build_requires" => {
-    "Module::Build" => "0.3601",
-    "Storable" => 0,
-    "Test::Fatal" => 0,
-    "Test::More" => "0.88",
-    "utf8" => 0
-  },
-  #"c_source" => "c",
-  #"configure_requires" => {
-  #  "Module::Build" => "0.3601"
-  #},
-  "dist_abstract" => "Basic infrastructure for writing asynchronous socket service",
-  "dist_author" => [
+    "build_requires" => {
+        "Module::Build" => "0.3601",
+        "Storable" => 0,
+        "Test::Fatal" => 0,
+        "Test::More" => "0.88",
+        "utf8" => 0
+    },
+    #"c_source" => "c",
+    #"configure_requires" => {
+    #  "Module::Build" => "0.3601"
+    #},
+    "dist_abstract" => "Basic infrastructure for writing asynchronous socket service",
+    "dist_author" => [
     "Sebastiano Piccoli <sebastiano.piccoli\@gmail.com>"
-  ],
-  "dist_name" => "Asyncore",
-  "dist_version" => "0.01",
-  "license" => "lgpl",
-  "module_name" => "Asyncore",
-  "recommends" => {},
-  "recursive_test_files" => 1,
-  "requires" => {
-    "Carp" => 0,
-    "base" => 0,
-    "constant" => 0,
-    "integer" => 0,
-    "overload" => 0,
-    "perl" => "5.008001",
-    "strict" => 0,
-    "vars" => 0,
-    "warnings" => 0
-  },
-  "script_files" => []
+    ],
+    "dist_name" => "Asyncore",
+    "dist_version" => "0.02",
+    "license" => "lgpl",
+    "module_name" => "Asyncore",
+    "recommends" => {},
+    "recursive_test_files" => 1,
+    "requires" => {
+        "IO::Select" => 0,
+        "IO::Socket::INET6" => 0,
+        "Carp" => 0,
+        "base" => 0,
+        "constant" => 0,
+        "integer" => 0,
+        "overload" => 0,
+        "perl" => "5.008001",
+        "strict" => 0,
+        "vars" => 0,
+        "warnings" => 0
+    },
+    "script_files" => []
 );
 
 

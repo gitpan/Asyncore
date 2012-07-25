@@ -23,10 +23,8 @@ use Asyncore;
 use TimeChannel;
 use base qw( Asyncore::Dispatcher );
 
-use Data::Dumper;
-
 sub init {
-    my($self, $port) = @_;
+    my($self, $port, $family, $type) = @_;
 
     $self->SUPER::init();
 
@@ -35,8 +33,7 @@ sub init {
     }
 
     $self->{_port} = $port;
-    #self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-    $self->create_socket($port); # pass also family and type?
+    $self->create_socket($port, $family, $type);
     $self->listen(5);
 }
 

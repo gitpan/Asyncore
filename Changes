@@ -1,3 +1,9 @@
+0.02_00  2012-07-25
+
+- init completed (in debug)
+- added socket family and type in create_socket
+
+
 0.01_00  2012-07-12
 
 - The first alpha release.  This module ...

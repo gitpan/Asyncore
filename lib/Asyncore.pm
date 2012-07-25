@@ -1,6 +1,6 @@
 package Asyncore;
 {
-  $Asyncore::VERSION = '0.01';
+  $Asyncore::VERSION = '0.02';
 }
 
 #==============================================================================
@@ -95,8 +95,6 @@ sub poll {
             return
         }
         
-        #printf "polling ...\n";
-        
         my($rr, $rw, $he);
         eval {
             # rr, wr: ready for reading/writing. he: has exception
@@ -167,6 +165,9 @@ sub loop {
 
 
 package Asyncore::Dispatcher;
+{
+    $Asyncore::Dispatcher::VERSION = '0.02';
+}
 
 #==============================================================================
 #
@@ -180,7 +181,7 @@ package Asyncore::Dispatcher;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  1.0
+#      VERSION:  0.2
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
@@ -188,7 +189,8 @@ package Asyncore::Dispatcher;
 use strict;
 use warnings;
 
-use IO::Socket::INET;
+use IO::Socket::INET6;
+use Errno;
 
 sub new {
   my $class = shift;
@@ -211,58 +213,27 @@ sub init {
 
     if ($sock) {
         # Set to nonblocking just to make sure for cases where we 
-        # get a socket from a blocking source (how?)
-        #$sock->setblocking(0)
+        # get a socket from a blocking source
+        $sock->blocking(0);
         $self->set_socket($sock, $map);
         $self->{_connected} = 1;
         
-        eval {
-            $self->{_addr} = $sock->peername(); 
-        };
-        if ($@) {    
-            # Handle the case where we got an unconnected socket
-            $self->{_connected} = 0;
-            # Handle the case where the socket is broken in some unknown way,
-            # alert the user and remove it from the map (to prevent polling
-            # of broken sockets)
-            #$self->del_channel($map);
+        if (not $sock->peername()) {
+            if ($!{ENOTCONN} || $!{EINVAL}) {
+                # Handle the case where we got an unconnected socket
+                $self->{_connected} = 0;
+            }
+            else {
+                # Handle the case where the socket is broken in some unknown
+                # way, alert the user and remove it from the map (to prevent
+                # polling of broken sockets)
+                $self->del_channel($map);
+            }
         }
     }
     else {
         $self->{_socket} = 0;
     }
-}
-
-sub create_socket {
-    my($self, $port, $family, $type) = @_;
-
-    # family, type 
-    # AF_INET, SOCK_STREAM
-    my $sock = IO::Socket::INET->new(LocalAddr => '',
-                                     LocalPort => $port,
-                                     Blocking => 0);
-    $self->set_socket($sock);
-
-}
-
-sub set_socket {
-    my($self, $sock, $map) = @_;
-
-    $self->{_socket} = $sock;
-    $self->{_fileno} = $sock->fileno();
-    $self->add_channel($map);
-}
-
-sub readable {
-    my $self = shift;
-    
-    return 1;
-}
-
-sub writable {
-    my $self = shift;
-    
-    return 1;
 }
 
 sub add_channel {
@@ -275,7 +246,7 @@ sub add_channel {
     $map->{$self->{_fileno}} = $self;
 }
 
-sub remove_channel {
+sub del_channel {
     my($self, $map) = @_;
 
     if (not $map) {
@@ -290,6 +261,46 @@ sub remove_channel {
     }
     
     $self->{_fileno} = undef;
+}   
+
+sub create_socket {
+    my($self, $port, $family, $type) = @_;
+    
+    if (not $family) {
+        $family = AF_INET;
+    }
+    if (not $type) {
+        $type = SOCK_STREAM; # tcp
+    }
+    # SOCK_DGRAM (udp), SOCK_RAW (icmp)
+    
+    my $sock = IO::Socket::INET6->new(LocalAddr => '',
+                                      LocalPort => $port,
+                                      Domain => $family,
+                                      Type => $type,
+                                      Blocking => 0);
+    $self->set_socket($sock);
+
+}
+
+sub set_socket {
+    my($self, $sock, $map) = @_;
+
+    $self->{_socket} = $sock;
+    $self->{_fileno} = $sock->fileno();
+    $self->add_channel($map);
+}
+    
+sub readable {
+    my $self = shift;
+    
+    return 1;
+}
+
+sub writable {
+    my $self = shift;
+    
+    return 1;
 }
 
 sub bind {
