@@ -1,6 +1,6 @@
 package Asyncore;
 {
-  $Asyncore::VERSION = '0.02';
+  $Asyncore::VERSION = '0.03';
 }
 
 #==============================================================================
@@ -14,7 +14,7 @@ package Asyncore;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  0.01
+#      VERSION:  0.03
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
@@ -166,7 +166,7 @@ sub loop {
 
 package Asyncore::Dispatcher;
 {
-    $Asyncore::Dispatcher::VERSION = '0.02';
+    $Asyncore::Dispatcher::VERSION = '0.03';
 }
 
 #==============================================================================
@@ -181,7 +181,7 @@ package Asyncore::Dispatcher;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  0.2
+#      VERSION:  0.3
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
@@ -319,16 +319,20 @@ sub listen {
 
 sub accept {
     my $self = shift;
-     
-    eval {
-        $self->{_socket}->accept();
-    };
-    if ($@) {
-        warn "Error in sub accept";
+    
+    my $conn;
+    
+    if (not $conn = $self->{_socket}->accept()) {
+        if ($!{EWOULDBLOCK} || $!{ECONNABORTED} || $!{EAGAIN}) {
+            # Handle the case where we cannot accept connection
+            return
+        }
+        else {
+            warn 'unknown error in accept()';
+        }        
     }
     
-    # ...
-    return 1; # $channel??
+    return $conn;
 }
 
 sub send {
@@ -343,6 +347,21 @@ sub send {
     #}
 
     return $result;
+}
+
+sub recv {
+    my($self, $buffer_size) = @_;
+    
+    my $data = $self->{_socket}->recv('', $buffer_size);
+    if (not $data) {
+        $self->handle_close();
+        return ''
+    }
+    else {
+        return $data;
+    }
+    
+    # check error
 }
 
 sub close {
@@ -380,7 +399,11 @@ sub handle_read_event {
 sub handle_connect_event {
     my $self = shift;
     
-    #todo
+    # some preliminary check
+    
+    $self->handle_connect();
+    $self->{_connected} = 1;
+    $self->{_connecting} = 0;
 }
 
 sub handle_write_event {
@@ -442,3 +465,22 @@ sub handle_accept {
 1;
 
 __END__
+
+
+=head1 NAME
+
+Asyncore - basic infrastracture for asynchronous socket services
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=head1 METHODS
+
+=head2 new()
+
+=head2 ...
+
+=head1 ACKNOWLEDGEMENTS
+
+=head1 LICENCE

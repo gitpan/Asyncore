@@ -1,3 +1,11 @@
+0.03_00  2012-08-01
+
+- handle_connect_event()
+- recv($buffer_size)
+- first traces of documentation
+- try to catch exception in accept()
+
+
 0.02_00  2012-07-25
 
 - init completed (in debug)
