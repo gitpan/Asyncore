@@ -1,3 +1,8 @@
+0.04_00  2012-09-04
+
+- added documentation
+- removed useless bind() function
+
 0.03_00  2012-08-01
 
 - handle_connect_event()

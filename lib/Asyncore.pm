@@ -1,6 +1,6 @@
 package Asyncore;
 {
-  $Asyncore::VERSION = '0.03';
+  $Asyncore::VERSION = '0.04';
 }
 
 #==============================================================================
@@ -14,7 +14,7 @@ package Asyncore;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  0.03
+#      VERSION:  0.04
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
@@ -166,7 +166,7 @@ sub loop {
 
 package Asyncore::Dispatcher;
 {
-    $Asyncore::Dispatcher::VERSION = '0.03';
+    $Asyncore::Dispatcher::VERSION = '0.04';
 }
 
 #==============================================================================
@@ -181,7 +181,7 @@ package Asyncore::Dispatcher;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  0.3
+#      VERSION:  0.4
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
@@ -234,6 +234,8 @@ sub init {
     else {
         $self->{_socket} = 0;
     }
+    
+    return $self;
 }
 
 sub add_channel {
@@ -303,12 +305,14 @@ sub writable {
     return 1;
 }
 
+=pod
 sub bind {
     my($self, $port) = @_;
 
     return $self->{_socket}->bind($port);
 }
-
+=cut
+ 
 sub listen {
     my($self, $num) = @_;
 
@@ -473,14 +477,53 @@ Asyncore - basic infrastracture for asynchronous socket services
 
 =head1 SYNOPSIS
 
+    use Asyncore;
+    use base qw( Asyncore::Dispatcher );
+    
+    my $server = Asyncore::Dispatcher->new();
+    $server->create_socket(35000);
+    $server->listen(5);
+ 
+    Asyncore::loop();
+
+ 
 =head1 DESCRIPTION
 
+Asyncore is a basic infrastructure for asyncronous socket programming. It provides an implementation of "reactive socket" and it provides hooks for handling events. Code must be written into these hooks (handlers).
+ 
+Asyncore captures the state of each connection (at the lowest level there is a call to select() and poll()) and it relies on the work to be done on the basis of the connection status (handler).
+ 
+To manage an asyncronous socket handler instantiate a subclass of Asyncore::Dispatcher and override methods that follow:
+ 
+ writable
+ readble
+ handle_connect
+ handle_accept
+ handle_read
+ handle_write
+ handle_close
+ handle_expt
+ handle_error
+ 
+ 
 =head1 METHODS
 
-=head2 new()
+=head2 Asyncore::loop($timeout, $use_poll, \%map, $count)
+ 
+Enter a polling loop that terminates after count passes or all open channels have been closed. All arguments are optional. The count parameter defaults to undef, resulting in the loop terminating only when all channels have been closed. The timeout argument sets the timeout parameter for the appropriate select() or poll() call, measured in seconds; the default is 30 seconds. [The use_poll parameter, if true, indicates that poll() should be used in preference to select() (the default is False) TBD].
+ 
+The map parameter is an hash reference whose items are the channels to watch. As channels are closed they are deleted from their map. If map is omitted, a global map is used. [Channels (instances of Asyncore::Dispatcher, Asynchat::async_chat() and subclasses thereof) can freely be mixed in the map. TBD]
 
-=head2 ...
+=head2 handle_connect()
+ 
+=head2 handle_accept()
+ 
+=head2 handle_write()
 
 =head1 ACKNOWLEDGEMENTS
 
+This module is a porting of asyncore.py written in python.
+ 
 =head1 LICENCE
+
+LGPL

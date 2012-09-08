@@ -32,7 +32,7 @@ sub init {
         $port = 37;
     }
 
-    $self->{_port} = $port;
+    #$self->{_port} = $port;
     $self->create_socket($port, $family, $type);
     $self->listen(5);
 }
