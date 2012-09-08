@@ -14,7 +14,7 @@ package Asyncore;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  0.04
+#      VERSION:  0.05
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
@@ -181,7 +181,7 @@ package Asyncore::Dispatcher;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  0.4
+#      VERSION:  0.5
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
@@ -305,13 +305,6 @@ sub writable {
     return 1;
 }
 
-=pod
-sub bind {
-    my($self, $port) = @_;
-
-    return $self->{_socket}->bind($port);
-}
-=cut
  
 sub listen {
     my($self, $num) = @_;
