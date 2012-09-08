@@ -1,6 +1,6 @@
 package Asyncore;
 {
-  $Asyncore::VERSION = '0.04';
+  $Asyncore::VERSION = '0.06';
 }
 
 #==============================================================================
@@ -14,7 +14,7 @@ package Asyncore;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  0.05
+#      VERSION:  0.06
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
@@ -166,7 +166,7 @@ sub loop {
 
 package Asyncore::Dispatcher;
 {
-    $Asyncore::Dispatcher::VERSION = '0.04';
+    $Asyncore::Dispatcher::VERSION = '0.06';
 }
 
 #==============================================================================
@@ -181,7 +181,7 @@ package Asyncore::Dispatcher;
 #        NOTES:  ---
 #       AUTHOR:   (Sebastiano Piccoli), <sebastiano.piccoli@gmail.com>
 #      COMPANY:  
-#      VERSION:  0.5
+#      VERSION:  0.6
 #      CREATED:  26/06/12 20:27:28 CEST
 #     REVISION:  ---
 #==============================================================================
