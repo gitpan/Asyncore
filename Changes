@@ -1,3 +1,19 @@
+0.08_00  2013-02-13
+
+- added connect()
+- added bind()
+- modified interface of create_socket(): it just takes family and type params
+  Port is passed to bind() in case of a server socket or connect in case of
+  a client socket. 
+- use of Socket package instead of IO::Socket::INET
+- use of Carp
+- fixed a check in the poll() subroutine:
+    next if !defined(fileno($fd));
+
+0.07_00  2013-02-08
+
+- debug version 
+
 0.06_00  2012-09-09
 
 - fix documentation

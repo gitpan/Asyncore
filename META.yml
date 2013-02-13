@@ -19,10 +19,10 @@ name: Asyncore
 provides:
   Asyncore:
     file: lib/Asyncore.pm
-    version: 0.06
+    version: 0.08
   Asyncore::Dispatcher:
     file: lib/Asyncore.pm
-    version: 0.06
+    version: 0.08
 requires:
   Carp: 0
   IO::Select: 0
@@ -37,4 +37,4 @@ requires:
   warnings: 0
 resources:
   license: http://opensource.org/licenses/lgpl-license.php
-version: 0.06
+version: 0.08

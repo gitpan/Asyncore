@@ -22,7 +22,7 @@ my %module_build_args = (
     "Sebastiano Piccoli <sebastiano.piccoli\@gmail.com>"
     ],
     "dist_name" => "Asyncore",
-    "dist_version" => "0.06",
+    "dist_version" => "0.08",
     "license" => "lgpl",
     "module_name" => "Asyncore",
     "recommends" => {},

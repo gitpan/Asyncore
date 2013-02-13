@@ -32,15 +32,15 @@ sub init {
         $port = 37;
     }
 
-    #$self->{_port} = $port;
-    $self->create_socket($port, $family, $type);
+    $self->create_socket($family, $type);
+    $self->bind($port);
     $self->listen(5);
 }
 
 sub handle_accept {
     my $self = shift;
     
-    my $channel = $self->{_socket}->accept();
+    my $channel = $self->accept();
     my $timechannel = TimeChannel->new($channel);
 }
 
